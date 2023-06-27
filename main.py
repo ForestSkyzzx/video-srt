@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import os
 import sys
 
 from common.logger import logger
@@ -17,7 +18,7 @@ def main():
         sys.exit(0)
     video_path = sys.argv[1]
     # 提取的录音文件的路径
-    audio_path = Config.OUTPUT_PATH + video_path.split("/")[-1].split(".")[0] + ".wav"
+    audio_path = os.path.join(Config.OUTPUT_PATH, video_path.split("/")[-1].split(".")[0] + ".wav")
     # 提取录音文件
     extract_audio(video_path, audio_path)
     # 录音文件位于cos桶中的位置
@@ -34,7 +35,7 @@ def main():
             srt_txt = to_srt(result)
             if srt_txt:
                 # 输出srt文件的路径
-                file_name = Config.OUTPUT_PATH + video_path.split("/")[-1].split(".")[0] + ".srt"
+                file_name = os.path.join(Config.OUTPUT_PATH, video_path.split("/")[-1].split(".")[0] + ".srt")
                 # 写入文件
                 make_srt(srt_txt, file_name)
             else:
