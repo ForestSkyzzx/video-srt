@@ -21,7 +21,7 @@ def get_file_ext(path):
 
 def main():
     if len(sys.argv) < 2:
-        logger.info("用法: python main.py <视频/音频文件路径>")
+        logger.info("usage: python main.py <video_or_audio_path>")
         sys.exit(0)
 
     input_path = sys.argv[1]
@@ -31,12 +31,12 @@ def main():
     # 判断格式是否直接支持
     if file_ext in SUPPORTED_FORMATS:
         # 直接支持，无需 ffmpeg 转换
-        logger.info(f"格式 {file_ext} 直接支持，跳过 ffmpeg 转换")
+        logger.info(f"format {file_ext} is supported, skip ffmpeg conversion")
         cos_file_path = os.path.basename(input_path)
         upload_file(input_path, cos_file_path)
     else:
         # 不支持的格式，用 ffmpeg 转为 wav
-        logger.info(f"格式 {file_ext} 不直接支持，使用 ffmpeg 转换为 wav")
+        logger.info(f"format {file_ext} is not supported, converting to wav via ffmpeg")
         audio_path = os.path.join(Config.OUTPUT_PATH, base_name + ".wav")
         extract_audio(input_path, audio_path)
         cos_file_path = os.path.basename(audio_path)
@@ -45,24 +45,24 @@ def main():
     # 获取 COS URL
     audio_cos_url = get_object_url(cos_file_path)
     if not audio_cos_url:
-        logger.error("获取 COS URL 失败")
+        logger.error("failed to get cos url")
         return
 
     # 创建识别任务并获取结果
     result = new_audio_file(tencent_config.ENGINE_TYPE, audio_cos_url)
     if not result:
-        logger.error("识别结果为空")
+        logger.error("recognition result is empty")
         return
 
     # 生成 SRT 字幕
     srt_txt = to_srt(result)
     if not srt_txt:
-        logger.error("SRT 生成失败")
+        logger.error("failed to generate srt")
         return
 
     srt_path = os.path.join(Config.OUTPUT_PATH, base_name + ".srt")
     make_srt(srt_txt, srt_path)
-    logger.info(f"字幕文件已生成: {srt_path}")
+    logger.info(f"subtitle file generated: {srt_path}")
 
 
 if __name__ == "__main__":
