@@ -41,7 +41,7 @@ def get_object_url(cos_file_path):
             Key=cos_file_path
         )
         if exists:
-            url = client.get_object_url(
+            url = client.get_presigned_download_url(
                 Bucket=Config.BUCKET,
                 Key=cos_file_path
             )
