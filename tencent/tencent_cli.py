@@ -44,7 +44,7 @@ def create_client(key_id, key_secret):
 def create_rec(engine_type, file_url):
     client = create_client(Config.SECRET_ID, Config.SECRET_KEY)
     req = models.CreateRecTaskRequest()
-    params = {"ChannelNum": 1, "ResTextFormat": 3, "SourceType": 0, "ConvertNumMode": 1}
+    params = {"ChannelNum": 1, "ResTextFormat": 3, "SourceType": 0, "ConvertNumMode": 1, "SentenceMaxLength": 15}
     req._deserialize(params)
     req.EngineModelType = engine_type
     req.Url = file_url
